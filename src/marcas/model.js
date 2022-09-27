@@ -11,6 +11,9 @@ Marca.init({
     },
     nome : DataTypes.STRING,
     descricao: DataTypes.STRING,
+    datacriacao : DataTypes.DATE,
+    cidade : DataTypes.STRING,
+
 }, { 
     sequelize: sequelizeCon, 
     schema: 'public',

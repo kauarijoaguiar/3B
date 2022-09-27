@@ -8,17 +8,19 @@ class MarcasController {
     }
 
     async create(req, res) {
-        // INPUT
-        const { nome, descricao } = req.body;
 
-        // PROCESSAMENTO
-        const user = await Marca.create({
-            nome, descricao
-        });
+    }
 
-        // RESPOSTA
-        return res.status(201).json(user);
+    async update(req, res) {
+        
+    }
 
+    async delete(req, res) {
+        
+    }
+
+    async list(req, res) {
+        
     }
 
 }

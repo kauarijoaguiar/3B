@@ -81,4 +81,10 @@ app.delete('/users/:name', (req, res) => {
 const usuariosRouter = require('./usuarios/routes');
 app.use('/usuarios', usuariosRouter);
 
+const marcasRouter = require('./marcas/routes');
+app.use('/marcas', marcasRouter);
+
+const tenisRouter = require('./tenis/routes');
+app.use('/tenis', tenisRouter);
+
 app.listen(3000, () => console.log("Listening at 3000"));

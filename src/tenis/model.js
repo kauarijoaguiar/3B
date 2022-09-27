@@ -12,6 +12,8 @@ Tenis.init({
     },
     nome : DataTypes.STRING,
     descricao: DataTypes.STRING,
+    lancamento: DataTypes.DATE,
+    colorway: DataTypes.STRING,
 }, { 
     sequelize: sequelizeCon, 
     schema: 'public',
