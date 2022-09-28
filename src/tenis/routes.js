@@ -6,8 +6,8 @@ const router = Router();
 const controller = new TenisController();
 
 router.post('/', (req, res) => controller.create(req, res));
-router.post('/', (req, res) => controller.update(req, res));
-router.get('/', (req, res) => controller.delete(req, res));
-router.get('/', (req, res) => controller.list(req, res));
+router.put('/update', (req, res) => controller.update(req, res));
+router.delete('/delete', (req, res) => controller.delete(req, res));
+router.get('/list', (req, res) => controller.list(req, res));
 
 module.exports = router;

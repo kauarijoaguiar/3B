@@ -6,8 +6,8 @@ const router = Router();
 const controller = new MarcasController();
 
 router.post('/', (req, res) => controller.create(req, res));
-router.post('/update', (req, res) => controller.update(req, res));
-router.get('/delete', (req, res) => controller.delete(req, res));
+router.put('/update', (req, res) => controller.update(req, res));
+router.delete('/delete', (req, res) => controller.delete(req, res));
 router.get('/list', (req, res) => controller.list(req, res));
 
 module.exports = router;

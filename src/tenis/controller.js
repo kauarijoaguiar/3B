@@ -20,7 +20,8 @@ class TenisController {
     }
 
     async list(req, res) {
-        
+        const tenis = await Tenis.findAndCountAll();
+        res.json(tenis);
     }
 
 
