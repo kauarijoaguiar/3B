@@ -5,9 +5,9 @@ const { sequelizeCon } = require('./db-config');
 
 
 Tenis.belongsTo(Marca);
-Marca.hasMany(Tenis);
+Marca.hasMany(Tenis, { onDelete: 'CASCADE' } );
 
 Marca.belongsTo(Usuario);
-Usuario.hasMany(Marca);
+Usuario.hasMany(Marca, { onDelete: 'CASCADE' });
 
 sequelizeCon.sync();

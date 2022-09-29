@@ -13,7 +13,6 @@ class MarcasController {
         // INPUT
         const { nome, descricao, cidade, datacriacao, usuarioId } = req.body;
 
-
         let M = await Usuario.findByPk(usuarioId)
 
 			if(!M){
@@ -32,19 +31,24 @@ class MarcasController {
 
         const { nome, descricao, cidade, datacriacao, usuarioId } = req.body;
 
-        Marca.update(
-            { nome, descricao, cidade, datacriacao, usuarioId },
-            { _id: 'ID DA MARCA' }
-
-        ).success(function () {
-
-            res.status(200).json({ message: "DELETOU DE BOA" });
-
-        }).error(function (err) {
-
-            res.status(404).json({ message: "ID TA ERRADO MALUCO" })
-
+        await Marca.update({ nome, descricao, cidade, datacriacao, usuarioId }, {
+        where: {
+            id: req.params.id
+        }
+        })
+        .then(function (updatedRecord) {
+            if (updatedRecord === 1) {
+                res.status(200).json({ message: "Update realizado com sucesso" });
+            }
+            else {
+                res.status(404).json({ message: "ID esta errado" })
+            }
+        })
+        .catch(function (error) {
+            res.status(500).json(error);
         });
+        
+        
     }
 
     async delete(req, res) {
@@ -56,10 +60,10 @@ class MarcasController {
         })
         .then(function (deletedRecord) {
             if (deletedRecord === 1) {
-                res.status(200).json({ message: "DELETOU DE BOA" });
+                res.status(200).json({ message: "Deletado" });
             }
             else {
-                res.status(404).json({ message: "ID TA ERRADO MALUCO" })
+                res.status(404).json({ message: "ID esta errado" })
             }
         })
         .catch(function (error) {
@@ -71,6 +75,34 @@ class MarcasController {
     async list(req, res) {
         const markas = await Marca.findAndCountAll();
         res.json(markas);
+    }
+
+    async BuscapeloId(req, res){      
+        try {
+
+            const markas = await Marca.findByPk(req.params.id)
+
+            if (!markas) {
+                throw { status: 404, message: "ID errado" }
+            }
+
+            const {
+                dataValues: {
+                    nome,
+                    descricao,
+                    datacriacao,
+                    cidade
+                }
+            } = markas
+
+            return res
+                .status(200)
+                .json({ nome, descricao, datacriacao, cidade })
+        } catch (error) {
+            return res
+                .status(error.status)
+                .json({ error });
+        }
     }
 
 }

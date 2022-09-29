@@ -51,12 +51,11 @@ class UsuariosController {
 
     async BuscapeloId(req, res) {
         try {
-            let {id} = req.params
-            id = parseFloat(id)
-            const user = await Usuario.findByPk(id)
+        
+            const user = await Usuario.findByPk(req.params.id)
 
             if (!user) {
-                throw {status: 404, message: "cu"}
+                throw { status: 404, message: "ID esta errado"}
             }
 
             const {
@@ -68,7 +67,7 @@ class UsuariosController {
 
             return res
                 .status(200)
-                .json({id, nome, email})
+                .json({nome, email})
         } catch (error) {
             return res
                 .status(error.status)
@@ -76,19 +75,47 @@ class UsuariosController {
         }
     }
 
-    
+    async update(req, res) {
+
+        const { email, senha, nome } = req.body;
+
+        await Usuario.update({ email, senha, nome }, {
+        where: {
+            id: req.params.id
+        }
+        })
+        .then(function (updatedRecord) {
+            if (updatedRecord === 1) {
+                res.status(200).json({ message: "Update realizado" });
+            }
+            else {
+                res.status(404).json({ message: "ID esta errado" })
+            }
+        })
+        .catch(function (error) {
+            res.status(500).json(error);
+        });
+        
+    }
 
     async delete(req, res) {
-        try {
-            const {id} = req.user;
-            await Usuario.destroy({where: {
-                    id
-                }});
 
-            res.status(200).json({msg: 'Deletado'});
-        } catch (error) {
-            return res.json({error});
-        }
+        Usuario.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(function (deletedRecord) {
+            if (deletedRecord === 1) {
+                res.status(200).json({ message: "Deletado" });
+            }
+            else {
+                res.status(404).json({ message: "ID esta errado" })
+            }
+        })
+        .catch(function (error) {
+            res.status(500).json(error);
+        });
     }
 
 

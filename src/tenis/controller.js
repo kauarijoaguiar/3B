@@ -27,11 +27,11 @@ class TenisController {
 
     async BuscapeloId(req, res){
         try {
-            let {id} = req.params
-            const shoes = await Tenis.findByPk(id)
+            
+            const shoes = await Tenis.findByPk(req.params.id)
 
             if (!shoes) {
-                throw {status: 404, message: "cu"}
+                throw { status: 404, message: "ID esta errado"}
             }
 
             const {
@@ -45,7 +45,7 @@ class TenisController {
 
             return res
                 .status(200)
-                .json({id, nome, descricao, lancamento, marcaId})
+                .json({nome, descricao, lancamento, marcaId})
         } catch (error) {
             return res
                 .status(error.status)
@@ -54,20 +54,46 @@ class TenisController {
     }
 
     async update(req, res) {
+
+        const { nome, descricao, lancamento, marcaId } = req.body;
+
+        await Tenis.update({ nome, descricao, lancamento, marcaId }, {
+        where: {
+            id: req.params.id
+        }
+        })
+        .then(function (updatedRecord) {
+            if (updatedRecord === 1) {
+                res.status(200).json({ message: "Update realizado" });
+            }
+            else {
+                res.status(404).json({ message: "ID esta errado" })
+            }
+        })
+        .catch(function (error) {
+            res.status(500).json(error);
+        });
         
     }
 
     async delete(req, res) {
-        try {
-            const {id} = req.user;
-            await Tenis.destroy({where: {
-                    id
-                }});
-
-            res.status(200).json({msg: 'Deletado'});
-        } catch (error) {
-            return res.json({error});
-        }
+        
+        Tenis.destroy({
+            where: {
+                id: req.params.id
+            }
+        })
+        .then(function (deletedRecord) {
+            if (deletedRecord === 1) {
+                res.status(200).json({ message: "Deletado" });
+            }
+            else {
+                res.status(404).json({ message: "ID esta errado" })
+            }
+        })
+        .catch(function (error) {
+            res.status(500).json(error);
+        });
     }
 
     async list(req, res) {
