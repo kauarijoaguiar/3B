@@ -1,5 +1,6 @@
 const { Marca } = require('./model');
 const jwt = require('jsonwebtoken');
+const { Usuario } = require('../usuarios/model');
 
 class MarcasController {
 
@@ -10,12 +11,17 @@ class MarcasController {
     async create(req, res) {
 
         // INPUT
-        const { nome, descricao, cidade } = req.body;
+        const { nome, descricao, cidade, datacriacao, usuarioId } = req.body;
+
+
+        let M = await Usuario.findByPk(usuarioId)
+
+			if(!M){
+				return res.status(400).json({msg: "Esse usuario não existe"})
+			}
 
         // PROCESSAMENTO
-        const marka = await Marca.create({
-            nome, descricao, cidade
-        });
+        const marka = await Marca.create({nome, descricao, cidade, datacriacao, usuarioId});
 
         // RESPOSTA
         return res.status(201).json(marka);
@@ -24,10 +30,10 @@ class MarcasController {
 
     async update(req, res) {
 
-        const { nome, descricao, cidade } = req.body;
+        const { nome, descricao, cidade, datacriacao, usuarioId } = req.body;
 
         Marca.update(
-            { nome, descricao, cidade },
+            { nome, descricao, cidade, datacriacao, usuarioId },
             { _id: 'ID DA MARCA' }
 
         ).success(function () {

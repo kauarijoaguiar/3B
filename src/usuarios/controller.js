@@ -47,6 +47,51 @@ class UsuariosController {
     async profile(req, res) {
         res.json({ user: req.user});
     }
+
+
+    async BuscapeloId(req, res) {
+        try {
+            let {id} = req.params
+            id = parseFloat(id)
+            const user = await Usuario.findByPk(id)
+
+            if (!user) {
+                throw {status: 404, message: "cu"}
+            }
+
+            const {
+                dataValues: {
+                    nome,
+                    email
+                }
+            } = user
+
+            return res
+                .status(200)
+                .json({id, nome, email})
+        } catch (error) {
+            return res
+                .status(error.status)
+                .json({error});
+        }
+    }
+
+    
+
+    async delete(req, res) {
+        try {
+            const {id} = req.user;
+            await Usuario.destroy({where: {
+                    id
+                }});
+
+            res.status(200).json({msg: 'Deletado'});
+        } catch (error) {
+            return res.json({error});
+        }
+    }
+
+
 }
 
 
