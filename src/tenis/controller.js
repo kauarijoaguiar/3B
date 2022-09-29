@@ -10,7 +10,7 @@ class TenisController {
     }
 
     async create(req, res) {
-        const { nome, descricao, lancamento, marcaId } = req.body;
+        const { nome, descricao, colorway ,lancamento, marcaId } = req.body;
 
         let T = await Marca.findByPk(marcaId)
 
@@ -18,7 +18,7 @@ class TenisController {
 				return res.status(400).json({msg: "Essa marca não existe"})
 			}
         // PROCESSAMENTO
-        const shoes = await Tenis.create({nome, descricao, lancamento, marcaId});
+        const shoes = await Tenis.create({nome, descricao, colorway, lancamento, marcaId});
 
         // RESPOSTA
         return res.status(201).json(shoes);
@@ -55,15 +55,16 @@ class TenisController {
 
     async update(req, res) {
 
-        const { nome, descricao, lancamento, marcaId } = req.body;
+        const { nome, descricao, colorway, lancamento, marcaId } = req.body;
 
-        await Tenis.update({ nome, descricao, lancamento, marcaId }, {
+        await Tenis.update({ nome, descricao, colorway, lancamento, marcaId }, {
         where: {
             id: req.params.id
         }
         })
         .then(function (updatedRecord) {
-            if (updatedRecord === 1) {
+            console.log({ updatedRecord });
+            if (updatedRecord[0] === 1) {
                 res.status(200).json({ message: "Update realizado" });
             }
             else {

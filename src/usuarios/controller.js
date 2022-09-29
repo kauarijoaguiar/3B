@@ -1,5 +1,5 @@
 const { Usuario } = require('./model');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 class UsuariosController {
@@ -10,8 +10,8 @@ class UsuariosController {
 
     async create(req, res) {
         // INPUT
-        const { email, senha, nome } = req.body;
-
+        const { email, nome } = req.body;
+        const senha = bcrypt.hashSync(req.body.senha,10);
         // PROCESSAMENTO
         const user = await Usuario.create({
             email, senha, nome
@@ -24,14 +24,15 @@ class UsuariosController {
 
     async auth(req, res) {
         const { email, senha } = req.body;
-
         const user = await Usuario.findOne({
             where: {
-                email, senha
+                email
             }
         });
 
-        if (!user) {
+        const confere= bcrypt.compareSync(senha, user.senha)
+
+        if (!confere) {
             return res.status(400).json({ msg: "USER AND PASS NOT MATCH"});
         }
         console.log(user);
@@ -43,11 +44,6 @@ class UsuariosController {
         const users = await Usuario.findAndCountAll();
         res.json(users);
     }
-
-    async profile(req, res) {
-        res.json({ user: req.user});
-    }
-
 
     async BuscapeloId(req, res) {
         try {
@@ -77,7 +73,9 @@ class UsuariosController {
 
     async update(req, res) {
 
-        const { email, senha, nome } = req.body;
+        const { email, nome } = req.body;
+
+        const senha = bcrypt.hashSync(req.body.senha,10);
 
         await Usuario.update({ email, senha, nome }, {
         where: {
